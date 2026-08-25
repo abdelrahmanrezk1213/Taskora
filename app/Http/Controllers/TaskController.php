@@ -50,6 +50,7 @@ class TaskController extends Controller
                 'pending' => $query->pending(),
                 'in_progress' => $query->inProgress(),
                 'completed' => $query->completed(),
+                default => null,
             };
         }
 
@@ -58,6 +59,7 @@ class TaskController extends Controller
                 'high' => $query->highPriority(),
                 'medium' => $query->mediumPriority(),
                 'low' => $query->lowPriority(),
+                default => null,
             };
         }
 
@@ -178,15 +180,7 @@ class TaskController extends Controller
 
         $categories = Category::orderBy('name')->get();
 
-        $users = collect();
-
-        if (Auth::user()->role === 'admin') {
-            $users = User::where('role', 'user')
-                ->orderBy('name')
-                ->get();
-        }
-
-        return view('tasks.edit', compact('task', 'categories', 'users'));
+        return view('tasks.edit', compact('task', 'categories'));
     }
 
     /**

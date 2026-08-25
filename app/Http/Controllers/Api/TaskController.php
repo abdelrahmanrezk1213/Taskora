@@ -3,13 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\StoreTaskRequest;
-use App\Http\Requests\UpdateTaskRequest;
+use App\Http\Requests\Api\StoreTaskRequest;
+use App\Http\Requests\Api\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
+use App\Events\TaskCreated;
+use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
 {
@@ -24,7 +26,7 @@ class TaskController extends Controller
         $user = Auth::user();
 
         $tasks = $user->tasks()
-            ->with('category')
+            ->with(['category', 'user', 'createdBy'])
             ->latest()
             ->paginate(10);
 
@@ -39,9 +41,23 @@ class TaskController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        $task = $user->tasks()->create($request->validated());
+        $validated = $request->validated();
 
-        return (new TaskResource($task->load('category')))
+        $validated['created_by'] = $user->id;
+
+        if ($request->hasFile('image')) {
+            $validated['image'] = $request
+                ->file('image')
+                ->store('tasks', 'public');
+        }
+
+        $task = $user->tasks()->create($validated);
+
+        event(new TaskCreated($task));
+
+        return (new TaskResource(
+            $task->load(['category', 'createdBy', 'user'])
+        ))
             ->response()
             ->setStatusCode(201);
     }
@@ -54,7 +70,7 @@ class TaskController extends Controller
         $this->authorize('view', $task);
 
         return new TaskResource(
-            $task->load('category')
+            $task->load(['category', 'user', 'createdBy'])
         );
     }
 
@@ -65,10 +81,22 @@ class TaskController extends Controller
     {
         $this->authorize('update', $task);
 
-        $task->update($request->validated());
+        $validated = $request->validated();
+
+        if ($request->hasFile('image')) {
+            if ($task->image) {
+                Storage::disk('public')->delete($task->image);
+            }
+
+            $validated['image'] = $request
+                ->file('image')
+                ->store('tasks', 'public');
+        }
+
+        $task->update($validated);
 
         return new TaskResource(
-            $task->fresh()->load('category')
+            $task->fresh()->load(['category', 'createdBy', 'user'])
         );
     }
 
