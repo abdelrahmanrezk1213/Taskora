@@ -1,19 +1,18 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\Api;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Validation\Rule;
 
-class StoreTaskRequest extends FormRequest
+class UpdateTaskRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
      */
     public function authorize(): bool
     {
-        return true;
+        return $this->user() !== null;
     }
 
     /**
@@ -38,7 +37,8 @@ class StoreTaskRequest extends FormRequest
             'image' => [
                 'nullable',
                 'image',
-                'mimes:jpg,jpeg,png,webp|max:2048',
+                'mimes:jpg,jpeg,png,webp',
+                'max:2048',
             ],
 
             'category_id' => [
@@ -60,18 +60,6 @@ class StoreTaskRequest extends FormRequest
                 'nullable',
                 'date',
             ],
-
-            'member_id' => [
-                Rule::requiredIf(fn() => $this->user()?->role === 'admin'),
-                'nullable',
-                'integer',
-                Rule::exists('users', 'id')->where(function ($query) {
-                    $query
-                        ->where('id', $this->user()?->id)
-                        ->orWhere('role', 'user');
-                }),
-            ],
-
         ];
     }
 }
