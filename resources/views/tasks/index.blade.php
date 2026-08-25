@@ -13,6 +13,13 @@
 
     <div class="page-shell space-y-6">
         <section class="glass-panel p-5 sm:p-6">
+            <div class="mb-5 flex flex-col gap-1 border-b border-white/10 pb-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-sm font-semibold text-white">Filter tasks</h2>
+                    <p class="mt-1 text-xs text-slate-400">Narrow your workspace by status, priority, or timing.</p>
+                </div>
+                <span class="text-xs text-slate-500">Updates automatically</span>
+            </div>
             <form id="task-filters-form" method="GET" action="{{ route('tasks.index') }}"
                 class="grid gap-x-4 gap-y-3 md:grid-cols-2 xl:grid-cols-12 xl:items-end">
                 <div class="xl:col-span-4">
@@ -86,10 +93,10 @@
                 </div>
 
                 <div class="flex items-end gap-2 md:col-span-2 xl:col-span-2">
-                        <button type="submit" class="primary-button flex-1">Apply</button>
-                        <a id="reset-filters" href="{{ route('tasks.index') }}" class="secondary-button flex-1 text-center">
-                            Reset
-                        </a>
+                    <button type="submit" class="primary-button flex-1">Apply</button>
+                    <a id="reset-filters" href="{{ route('tasks.index') }}" class="secondary-button flex-1 text-center">
+                        Reset
+                    </a>
                 </div>
             </form>
         </section>

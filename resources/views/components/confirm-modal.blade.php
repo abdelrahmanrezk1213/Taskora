@@ -45,7 +45,7 @@
         x-transition:leave="transition ease-in duration-150"
         x-transition:leave-start="translate-y-0 scale-100 opacity-100"
         x-transition:leave-end="translate-y-4 scale-95 opacity-0"
-        class="relative w-full max-w-md rounded-3xl border border-white/10 bg-slate-900/95 p-6 shadow-2xl shadow-black/40 backdrop-blur-xl">
+        class="relative w-full max-w-md rounded-2xl border border-white/10 bg-slate-900/95 p-6 shadow-2xl shadow-black/40 backdrop-blur-xl">
         <div class="flex items-start gap-4">
             {{-- Warning Icon --}}
             <div

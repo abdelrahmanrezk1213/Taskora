@@ -116,29 +116,29 @@
         <section class="grid gap-4 lg:grid-cols-[0.8fr_1.2fr]">
             <div class="glass-panel p-5">
                 <div class="flex items-start justify-between gap-4">
-                <div>
-                    <h2 class="text-lg font-semibold text-white">Task Completion</h2>
-                    <p class="mt-1 text-sm text-slate-300">Overall progress across your active work.</p>
-                </div>
+                    <div>
+                        <h2 class="text-lg font-semibold text-white">Task Completion</h2>
+                        <p class="mt-1 text-sm text-slate-300">Overall progress across your active work.</p>
+                    </div>
                     <div class="text-2xl font-bold text-cyan-300">{{ $completionPercentage }}%</div>
-            </div>
+                </div>
 
-            <div class="mt-8 h-2.5 overflow-hidden rounded-full bg-slate-800">
-                <div class="h-full rounded-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-violet-500 transition-all duration-500"
-                    style="width: {{ $completionPercentage }}%;"></div>
-            </div>
+                <div class="mt-8 h-2.5 overflow-hidden rounded-full bg-slate-800">
+                    <div class="h-full rounded-full bg-gradient-to-r from-cyan-500 via-indigo-500 to-violet-500 transition-all duration-500"
+                        style="width: {{ $completionPercentage }}%;"></div>
+                </div>
 
-            <div class="mt-3 flex items-center justify-between text-xs text-slate-400">
-                <span>{{ $completedTasks }} completed</span>
-                <span>{{ $totalTasks }} total</span>
-            </div>
+                <div class="mt-3 flex items-center justify-between text-xs text-slate-400">
+                    <span>{{ $completedTasks }} completed</span>
+                    <span>{{ $totalTasks }} total</span>
+                </div>
             </div>
 
             <div class="glass-panel overflow-hidden">
-            <div class="flex items-center justify-between border-b border-white/10 px-5 py-4">
-                <h2 class="text-lg font-semibold text-white">Latest Tasks</h2>
-                <a href="{{ route('tasks.index') }}" class="text-xs font-semibold text-cyan-300 hover:text-cyan-200">View all</a>
-            </div>
+                <div class="flex items-center justify-between border-b border-white/10 px-5 py-4">
+                    <h2 class="text-lg font-semibold text-white">Latest Tasks</h2>
+                    <a href="{{ route('tasks.index') }}" class="text-xs font-semibold text-cyan-300 hover:text-cyan-200">View all</a>
+                </div>
 
             @if ($latestTasks->isEmpty())
                 <div class="p-6">
@@ -147,9 +147,9 @@
                 </div>
             @else
                 <div class="divide-y divide-white/10">
-                            @foreach ($latestTasks as $task)
-                                <a href="{{ route('tasks.show', $task) }}" class="block px-5 py-3.5 transition hover:bg-white/5">
-                                    <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+                    @foreach ($latestTasks as $task)
+                        <a href="{{ route('tasks.show', $task) }}" class="block px-5 py-3.5 transition hover:bg-white/5">
+                            <div class="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
                                     <div class="min-w-0">
                                         <p class="truncate font-medium text-white">{{ $task->title }}</p>
                                         <p class="mt-1 text-xs text-slate-400">{{ $task->category?->name ?? 'No Category' }} <span class="text-slate-600">·</span> {{ $task->due_date?->format('d M Y') ?? 'No due date' }}</p>
@@ -162,34 +162,9 @@
                                         @endswitch
                                         <x-status-badge value="{{ $task->priority }}" type="priority" />
                                     </div>
-                                    </div>
-                                </a>
-                                {{--
-                                    <td class="px-5 py-4">
-                                        <a href="{{ route('tasks.show', $task) }}"
-                                            class="font-medium text-white hover:text-cyan-300">{{ $task->title }}</a>
-                                    </td>
-                                    <td class="px-5 py-4 text-slate-300">{{ $task->category?->name ?? 'No Category' }}
-                                    </td>
-                                    <td class="px-5 py-4">
-                                        @switch($task->status)
-                                            @case('pending')
-                                                <x-status-badge value="pending" />
-                                            @break
-
-                                            @case('in_progress')
-                                                <x-status-badge value="in_progress" />
-                                            @break
-
-                                            @default
-                                                <x-status-badge value="completed" />
-                                        @endswitch
-                                    </td>
-                                    <td class="px-5 py-4">
-                                        <x-status-badge value="{{ $task->priority }}" type="priority" />
-                                    </td>
-                                </tr> --}}
-                            @endforeach
+                            </div>
+                        </a>
+                    @endforeach
                 </div>
             @endif
             </div>
