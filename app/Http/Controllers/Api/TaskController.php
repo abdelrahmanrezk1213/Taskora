@@ -11,6 +11,7 @@ use App\Models\User;
 use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
 use Illuminate\Support\Facades\Auth;
 use App\Events\TaskCreated;
+use App\Http\Requests\Api\TaskIndexRequest;
 use Illuminate\Support\Facades\Storage;
 
 class TaskController extends Controller
@@ -20,65 +21,70 @@ class TaskController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(TaskIndexRequest $request)
     {
         /** @var User $user */
         $user = Auth::user();
 
+        $filters = $request->validated();
+
         $query = $user->tasks()
-            ->with(['category', 'user', 'createdBy']);
+            ->with([
+                'category',
+                'user',
+                'createdBy',
+            ]);
 
-        $query->when(
-            request('search'),
-            fn($q, $search) =>
-            $q->where(function ($query) use ($search) {
-                $query->where('title', 'like', "%{$search}%")
+        $query->when($filters['search'] ?? null, function ($query, $search) {
+            $query->where(function ($q) use ($search) {
+                $q->where('title', 'like', "%{$search}%")
                     ->orWhere('description', 'like', "%{$search}%");
-            })
-        );
+            });
+        });
 
-        $query->when(
-            request('category'),
-            fn($q, $category) =>
-            $q->where('category_id', $category)
-        );
+        $query->when($filters['category'] ?? null, function ($query, $category) {
+            $query->where('category_id', $category);
+        });
 
-        $query->when(
-            request('status'),
-            fn($q, $status) =>
-            $q->where('status', $status)
-        );
+        $query->when($filters['status'] ?? null, function ($query, $status) {
+            $query->where('status', $status);
+        });
 
-        $query->when(
-            request('priority'),
-            fn($q, $priority) =>
-            $q->where('priority', $priority)
-        );
+        $query->when($filters['priority'] ?? null, function ($query, $priority) {
+            $query->where('priority', $priority);
+        });
 
-        $query->when(
-            request('due_date_filter') === 'overdue',
-            fn($q) =>
-            $q->whereDate('due_date', '<', now())
-                ->where('status', '!=', 'completed')
-        );
+        switch ($filters['due_date_filter'] ?? null) {
+            case 'overdue':
+                $query->whereDate('due_date', '<', today())
+                    ->where('status', '!=', 'completed');
+                break;
 
-        $query->when(
-            request('sort') === 'due_soonest',
-            fn($q) =>
-            $q->orderBy('due_date')
-        );
+            case 'today':
+                $query->whereDate('due_date', today())
+                    ->where('status', '!=', 'completed');
+                break;
 
-        $query->when(
-            request('sort') === 'newest',
-            fn($q) =>
-            $q->latest()
-        );
+            case 'upcoming':
+                $query->whereDate('due_date', '>', today())
+                    ->where('status', '!=', 'completed');
+                break;
+        }
 
-        $query->when(
-            request('sort') === 'oldest',
-            fn($q) =>
-            $q->oldest()
-        );
+        switch ($filters['sort'] ?? 'newest') {
+            case 'oldest':
+                $query->oldest();
+                break;
+
+            case 'due_soonest':
+                $query->orderBy('due_date');
+                break;
+
+            case 'newest':
+            default:
+                $query->latest();
+                break;
+        }
 
         $tasks = $query
             ->paginate(10)
@@ -107,10 +113,14 @@ class TaskController extends Controller
 
         $task = $user->tasks()->create($validated);
 
-        event(new TaskCreated($task));
+        TaskCreated::dispatch($task);
 
         return (new TaskResource(
-            $task->load(['category', 'createdBy', 'user'])
+            $task->load([
+                'category',
+                'user',
+                'createdBy',
+            ])
         ))
             ->response()
             ->setStatusCode(201);
@@ -138,7 +148,11 @@ class TaskController extends Controller
         $validated = $request->validated();
 
         if ($request->hasFile('image')) {
-            if ($task->image) {
+
+            if (
+                $task->image &&
+                Storage::disk('public')->exists($task->image)
+            ) {
                 Storage::disk('public')->delete($task->image);
             }
 
@@ -149,8 +163,14 @@ class TaskController extends Controller
 
         $task->update($validated);
 
+        $task->refresh();
+
         return new TaskResource(
-            $task->fresh()->load(['category', 'createdBy', 'user'])
+            $task->load([
+                'category',
+                'user',
+                'createdBy',
+            ])
         );
     }
 
