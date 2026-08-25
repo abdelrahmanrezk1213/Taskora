@@ -25,10 +25,64 @@ class TaskController extends Controller
         /** @var User $user */
         $user = Auth::user();
 
-        $tasks = $user->tasks()
-            ->with(['category', 'user', 'createdBy'])
-            ->latest()
-            ->paginate(10);
+        $query = $user->tasks()
+            ->with(['category', 'user', 'createdBy']);
+
+        $query->when(
+            request('search'),
+            fn($q, $search) =>
+            $q->where(function ($query) use ($search) {
+                $query->where('title', 'like', "%{$search}%")
+                    ->orWhere('description', 'like', "%{$search}%");
+            })
+        );
+
+        $query->when(
+            request('category'),
+            fn($q, $category) =>
+            $q->where('category_id', $category)
+        );
+
+        $query->when(
+            request('status'),
+            fn($q, $status) =>
+            $q->where('status', $status)
+        );
+
+        $query->when(
+            request('priority'),
+            fn($q, $priority) =>
+            $q->where('priority', $priority)
+        );
+
+        $query->when(
+            request('due_date_filter') === 'overdue',
+            fn($q) =>
+            $q->whereDate('due_date', '<', now())
+                ->where('status', '!=', 'completed')
+        );
+
+        $query->when(
+            request('sort') === 'due_soonest',
+            fn($q) =>
+            $q->orderBy('due_date')
+        );
+
+        $query->when(
+            request('sort') === 'newest',
+            fn($q) =>
+            $q->latest()
+        );
+
+        $query->when(
+            request('sort') === 'oldest',
+            fn($q) =>
+            $q->oldest()
+        );
+
+        $tasks = $query
+            ->paginate(10)
+            ->withQueryString();
 
         return TaskResource::collection($tasks);
     }

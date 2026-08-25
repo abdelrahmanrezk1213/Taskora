@@ -30,26 +30,26 @@ class TaskResource extends JsonResource
 
             'is_overdue' => $this->is_overdue,
 
-            'category' => $this->category
-                ? [
+            'category' => $this->whenLoaded('category', function () {
+                return [
                     'id' => $this->category->id,
                     'name' => $this->category->name,
-                ]
-                : null,
+                ];
+            }),
 
-            'assigned_to' => $this->user
-                ? [
+            'assigned_to' => $this->whenLoaded('user', function () {
+                return [
                     'id' => $this->user->id,
                     'name' => $this->user->name,
-                ]
-                : null,
+                ];
+            }),
 
-            'created_by' => $this->createdBy
-                ? [
+            'created_by' => $this->whenLoaded('createdBy', function () {
+                return [
                     'id' => $this->createdBy->id,
                     'name' => $this->createdBy->name,
-                ]
-                : null,
+                ];
+            }),
 
             'image' => $this->image
                 ? asset('storage/' . $this->image)
