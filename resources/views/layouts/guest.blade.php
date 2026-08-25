@@ -4,6 +4,14 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <script>
+            (() => {
+                const savedTheme = localStorage.getItem('taskora-theme');
+                const theme = savedTheme || (window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark');
+                document.documentElement.classList.toggle('light', theme === 'light');
+                document.documentElement.classList.toggle('dark', theme !== 'light');
+            })();
+        </script>
 
         <title>{{ config('app.name', 'Taskora') }} - Sign In</title>
 

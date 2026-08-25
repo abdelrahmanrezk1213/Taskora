@@ -22,13 +22,21 @@
                     <a href="{{ route('categories.index') }}" class="rounded-full border {{ request()->routeIs('categories.*') ? 'border-cyan-400/40 bg-cyan-500/10 text-white' : 'border-transparent text-slate-300 hover:border-white/10 hover:bg-white/5 hover:text-white' }} px-3 py-2 text-sm font-medium">
                         Categories
                     </a>
-                    <a href="{{ route('tasks.trash') }}" class="rounded-full border {{ request()->routeIs('tasks.trash') ? 'border-rose-400/40 bg-rose-500/10 text-white' : 'border-transparent text-slate-300 hover:border-white/10 hover:bg-white/5 hover:text-white' }} px-3 py-2 text-sm font-medium">
+                    {{-- <a href="{{ route('tasks.trash') }}" class="rounded-full border {{ request()->routeIs('tasks.trash') ? 'border-rose-400/40 bg-rose-500/10 text-white' : 'border-transparent text-slate-300 hover:border-white/10 hover:bg-white/5 hover:text-white' }} px-3 py-2 text-sm font-medium">
                         Trash
-                    </a>
+                    </a> --}}
                 </div>
             </div>
 
-            <div class="hidden items-center gap-3 sm:flex">
+            <div class="hidden items-center gap-2 sm:flex">
+                <button type="button" @click="toggle()" class="theme-toggle" aria-label="Toggle color theme" title="Toggle color theme">
+                    <svg x-show="theme === 'dark'" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <svg x-show="theme === 'light'" x-cloak class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" />
+                    </svg>
+                </button>
                 <div class="relative" x-data="{ notificationsOpen: false }">
                     <button @click="notificationsOpen = !notificationsOpen" type="button" class="relative flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 hover:border-cyan-400/40 hover:text-white">
                         <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -85,7 +93,11 @@
                 </x-dropdown>
             </div>
 
-            <div class="-me-2 flex items-center sm:hidden">
+            <div class="flex items-center gap-2 sm:hidden">
+                <button type="button" @click="toggle()" class="theme-toggle" aria-label="Toggle color theme" title="Toggle color theme">
+                    <svg x-show="theme === 'dark'" class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707m12.728 0l-.707-.707M6.343 6.343l-.707-.707M16 12a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
+                    <svg x-show="theme === 'light'" x-cloak class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z" /></svg>
+                </button>
                 <button @click="open = ! open" class="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-white/5 text-slate-200 hover:border-cyan-400/40 hover:text-white">
                     <svg class="h-5 w-5" stroke="currentColor" fill="none" viewBox="0 0 24 24">
                         <path :class="{ 'hidden': open, 'inline-flex': !open }" class="inline-flex" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" d="M4 6h16M4 12h16M4 18h16" />

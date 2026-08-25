@@ -4,6 +4,10 @@
 
 :root {
     color-scheme: dark;
+    --page-bg: #020817;
+    --panel-bg: rgba(15, 23, 42, 0.6);
+    --field-bg: rgba(2, 6, 23, 0.6);
+    --line: rgba(255, 255, 255, 0.1);
 }
 
 html {
@@ -12,6 +16,7 @@ html {
 
 body {
     @apply min-h-screen bg-slate-950 text-slate-100 antialiased;
+    transition: background-color 220ms ease, color 220ms ease;
     background-image:
         radial-gradient(
             circle at top left,
@@ -46,7 +51,7 @@ body {
 
 @layer components {
     .glass-panel {
-        @apply rounded-3xl border border-white/10 bg-slate-900/60 shadow-glow backdrop-blur-xl;
+        @apply rounded-2xl border border-white/10 bg-slate-900/60 shadow-glow backdrop-blur-xl;
     }
 
     .soft-input {
@@ -80,6 +85,10 @@ body {
     .field-label {
         @apply mb-2 block text-xs font-semibold uppercase tracking-[0.16em] text-slate-400;
     }
+
+    .theme-toggle {
+        @apply inline-flex h-11 w-11 items-center justify-center rounded-xl border border-white/10 bg-white/5 text-slate-300 transition hover:border-cyan-400/40 hover:bg-cyan-500/10 hover:text-cyan-200 focus:outline-none focus:ring-2 focus:ring-cyan-400/40;
+    }
 }
 
 @layer utilities {
@@ -90,6 +99,10 @@ body {
 
 html.light {
     color-scheme: light;
+    --page-bg: #f1f5f9;
+    --panel-bg: rgba(255, 255, 255, 0.78);
+    --field-bg: rgba(255, 255, 255, 0.9);
+    --line: rgba(15, 23, 42, 0.1);
 }
 
 html.light body {
@@ -109,7 +122,7 @@ html.light body {
 }
 
 html.light .glass-panel {
-    @apply border-slate-200/80 bg-white/75 text-slate-900 shadow-[0_30px_80px_-30px_rgba(15,23,42,0.15)];
+    @apply border-slate-200/80 bg-white/75 text-slate-900 shadow-[0_24px_60px_-32px_rgba(15,23,42,0.25)];
 }
 
 html.light .soft-input {
@@ -122,6 +135,52 @@ html.light .secondary-button {
 
 html.light .soft-button {
     @apply text-slate-800;
+}
+
+html.light .theme-toggle {
+    @apply border-slate-200 bg-white hover:border-cyan-400/60 hover:bg-cyan-50;
+    color: #475569;
+}
+
+html.light .theme-toggle:hover {
+    color: #0e7490;
+}
+
+html.light nav,
+html.light header {
+    @apply border-slate-200/80 bg-white/75;
+}
+
+html.light .bg-slate-950\/40,
+html.light .bg-slate-950\/30,
+html.light .bg-slate-950\/60,
+html.light .bg-slate-900\/40,
+html.light .bg-slate-900\/60,
+html.light .bg-slate-900\/80 {
+    background-color: rgba(248, 250, 252, 0.82);
+}
+
+html.light .border-white\/10,
+html.light .border-white\/5 {
+    border-color: rgba(15, 23, 42, 0.1);
+}
+
+html.light .text-white {
+    color: #0f172a;
+}
+
+html.light .text-cyan-200,
+html.light .text-cyan-300 {
+    color: #0e7490;
+}
+
+html.light .text-slate-300,
+html.light .text-slate-400 {
+    color: #475569;
+}
+
+html.light .text-slate-500 {
+    color: #64748b;
 }
 
 html.light .text-slate-100,
