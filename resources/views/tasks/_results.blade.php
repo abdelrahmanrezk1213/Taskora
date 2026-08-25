@@ -1,0 +1,122 @@
+<section class="glass-panel overflow-hidden">
+    <div class="overflow-x-auto">
+
+        <div id="loading-spinner" class="hidden py-8 text-center">
+            <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-cyan-400 border-t-transparent">
+            </div>
+        </div>
+
+        <table class="min-w-full divide-y divide-white/10">
+            <thead class="bg-slate-950/40 text-left">
+                <tr>
+                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">#</th>
+                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Title
+                    </th>
+                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        Category</th>
+                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Status
+                    </th>
+                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        Priority</th>
+                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        Due Date</th>
+                    {{-- <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        Created At</th> --}}
+                    <th class="px-5 py-4 text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        Actions</th>
+                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        Created By</th>
+                </tr>
+            </thead>
+            <tbody class="divide-y divide-white/10">
+                @forelse ($tasks as $task)
+                    <tr class="hover:bg-white/5">
+                        <td class="px-5 py-4 text-slate-300">
+                            {{ $loop->iteration + ($tasks->firstItem() ?? 0) - 1 }}</td>
+                        <td class="px-5 py-4">
+                            <a href="{{ route('tasks.show', $task) }}"
+                                class="font-semibold text-white hover:text-cyan-300">{{ $task->title }}</a>
+                        </td>
+                        <td class="px-5 py-4 text-slate-300">{{ $task->category?->name ?? 'No Category' }}</td>
+                        <td class="px-5 py-4">
+                            @switch($task->status)
+                                @case('pending')
+                                    <x-status-badge value="pending" />
+                                @break
+
+                                @case('in_progress')
+                                    <x-status-badge value="in_progress" />
+                                @break
+
+                                @case('completed')
+                                    <x-status-badge value="completed" />
+                                @break
+                            @endswitch
+                        </td>
+                        <td class="px-5 py-4">
+                            <x-status-badge value="{{ $task->priority }}" type="priority" />
+                        </td>
+                        <td class="px-5 py-4">
+                            @if ($task->due_date)
+                                @if ($task->is_overdue)
+                                    <span
+                                        class="inline-flex items-center rounded-full border border-rose-400/20 bg-rose-500/10 px-2.5 py-1 text-xs font-semibold text-rose-300">
+                                        Overdue
+                                    </span>
+                                @elseif ($task->due_date->isToday())
+                                    <span
+                                        class="inline-flex items-center rounded-full border border-amber-400/20 bg-amber-500/10 px-2.5 py-1 text-xs font-semibold text-amber-300">
+                                        Today
+                                    </span>
+                                @else
+                                    <span class="text-slate-300">
+                                        {{ $task->due_date->format('d M Y') }}
+                                    </span>
+                                @endif
+                            @else
+                                <span class="text-slate-500">
+                                    No Due Date
+                                </span>
+                            @endif
+                        </td>
+                        {{-- <td class="px-5 py-4 text-slate-300">{{ $task->created_at->format('d M Y') }}</td> --}}
+                        <td class="px-5 py-4">
+                            <div class="flex items-center justify-center gap-2">
+                                <a href="{{ route('tasks.show', $task) }}"
+                                    class="secondary-button px-3 py-2 text-xs">View</a>
+                                <a href="{{ route('tasks.edit', $task) }}"
+                                    class="secondary-button px-3 py-2 text-xs">Edit</a>
+                                <form action="{{ route('tasks.destroy', $task) }}" method="POST">
+                                    @csrf
+                                    @method('DELETE')
+
+                                    <button type="button" class="danger-button px-3 py-2 text-xs" data-confirm
+                                        data-confirm-title="Delete Task"
+                                        data-confirm-message="Are you sure you want to move this task to trash?"
+                                        data-confirm-text="Delete Task">
+                                        Delete
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                        <td class="px-5 py-4 text-center text-slate-300">{{ $task->createdBy?->name ?? 'Unknown' }}
+                        </td>
+                    </tr>
+                    @empty
+                        <tr>
+                            <td colspan="9" class="px-5 py-16">
+                                <x-empty-state title="No tasks found"
+                                    description="Use the new task button to add your first item." />
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+        @if ($tasks->hasPages())
+            <div class="border-t border-white/10 p-5">
+                {{ $tasks->links() }}
+            </div>
+        @endif
+    </section>
