@@ -2,8 +2,8 @@
 
 <div class="space-y-6">
     <div>
-        <label class="mb-2 block text-sm font-medium text-slate-200">Category Name</label>
-        <input type="text" name="name" value="{{ old('name', $category->name ?? '') }}" placeholder="Enter category name..." class="soft-input">
+        <label for="name" class="field-label">Category Name</label>
+        <input id="name" type="text" name="name" value="{{ old('name', $category->name ?? '') }}" placeholder="Enter category name..." class="soft-input">
         @error('name')
             <p class="mt-2 text-sm text-rose-300">{{ $message }}</p>
         @enderror

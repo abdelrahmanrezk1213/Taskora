@@ -12,17 +12,17 @@
     </x-slot>
 
     <div class="page-shell space-y-6">
-        <section class="glass-panel p-5">
+        <section class="glass-panel p-5 sm:p-6">
             <form id="task-filters-form" method="GET" action="{{ route('tasks.index') }}"
-                class="grid gap-4 md:grid-cols-2 xl:grid-cols-12">
+                class="grid gap-x-4 gap-y-3 md:grid-cols-2 xl:grid-cols-12 xl:items-end">
                 <div class="xl:col-span-4">
-                    <label for="search" class="mb-2 block text-sm font-medium text-slate-200">Search</label>
+                    <label for="search" class="field-label">Search</label>
                     <input id="search" type="text" name="search" value="{{ request('search') }}"
                         placeholder="Search by title..." class="soft-input">
                 </div>
 
                 <div class="xl:col-span-2">
-                    <label for="category" class="mb-2 block text-sm font-medium text-slate-200">Category</label>
+                    <label for="category" class="field-label">Category</label>
                     <select id="category" name="category" class="soft-input">
                         <option value="">All Categories</option>
                         @foreach ($categories as $category)
@@ -33,7 +33,7 @@
                 </div>
 
                 <div class="xl:col-span-2">
-                    <label for="status" class="mb-2 block text-sm font-medium text-slate-200">Status</label>
+                    <label for="status" class="field-label">Status</label>
                     <select id="status" name="status" class="soft-input">
                         <option value="">All Status</option>
                         <option value="pending" @selected(request('status') == 'pending')>Pending</option>
@@ -43,7 +43,7 @@
                 </div>
 
                 <div class="xl:col-span-2">
-                    <label for="priority" class="mb-2 block text-sm font-medium text-slate-200">Priority</label>
+                    <label for="priority" class="field-label">Priority</label>
                     <select id="priority" name="priority" class="soft-input">
                         <option value="">All Priorities</option>
                         <option value="low" @selected(request('priority') == 'low')>Low</option>
@@ -53,7 +53,7 @@
                 </div>
 
                 <div class="xl:col-span-2">
-                    <label for="due_date_filter" class="mb-2 block text-sm font-medium text-slate-200">
+                    <label for="due_date_filter" class="field-label">
                         Due Date
                     </label>
 
@@ -75,7 +75,7 @@
                 </div>
 
                 <div class="xl:col-span-2">
-                    <label for="sort" class="mb-2 block text-sm font-medium text-slate-200">Sort By</label>
+                    <label for="sort" class="field-label">Sort By</label>
                     <select id="sort" name="sort" class="soft-input">
                         <option value="">Newest</option>
                         <option value="oldest" @selected(request('sort') == 'oldest')>Oldest</option>
@@ -85,13 +85,11 @@
                     </select>
                 </div>
 
-                <div class="xl:col-span-6 flex items-end gap-3">
-                    <div class="flex items-end gap-2">
-                        <button type="submit" class="primary-button w-full">Apply</button>
-                        <a id="reset-filters" href="{{ route('tasks.index') }}" class="secondary-button w-full">
+                <div class="flex items-end gap-2 md:col-span-2 xl:col-span-2">
+                        <button type="submit" class="primary-button flex-1">Apply</button>
+                        <a id="reset-filters" href="{{ route('tasks.index') }}" class="secondary-button flex-1 text-center">
                             Reset
                         </a>
-                    </div>
                 </div>
             </form>
         </section>
