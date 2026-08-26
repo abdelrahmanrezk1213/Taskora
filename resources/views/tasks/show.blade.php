@@ -74,7 +74,7 @@
                                 <button type="button" @click="imageModalOpen = true"
                                     class="group relative block w-full cursor-zoom-in overflow-hidden rounded-xl border border-white/10 bg-slate-900/60 p-3 transition duration-300 hover:border-cyan-400/40 focus:outline-none focus:ring-2 focus:ring-cyan-400/40">
                                     <div
-                                        class="flex h-[360px] items-center justify-center overflow-hidden rounded-lg bg-slate-950/60">
+                                        class="flex h-[280px] items-center justify-center overflow-hidden rounded-lg bg-slate-950/60 sm:h-[340px]">
                                         <img src="{{ asset('storage/' . $task->image) }}" alt="{{ $task->title }}"
                                             class="max-h-full max-w-full rounded-lg object-contain transition duration-300 group-hover:scale-[1.02] group-hover:opacity-90">
                                     </div>

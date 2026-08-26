@@ -1,31 +1,25 @@
-<section class="glass-panel overflow-hidden">
-    <div class="overflow-x-auto">
+<section class="glass-panel relative overflow-hidden">
+    <div id="loading-spinner" class="absolute inset-0 z-10 hidden items-center justify-center bg-slate-950/55 backdrop-blur-[2px]" role="status" aria-live="polite" aria-label="Loading tasks">
+        <div class="h-8 w-8 animate-spin rounded-full border-2 border-cyan-300/30 border-t-cyan-300"></div>
+    </div>
 
-        <div id="loading-spinner" class="hidden py-8 text-center">
-            <div class="inline-block h-8 w-8 animate-spin rounded-full border-4 border-cyan-400 border-t-transparent">
-            </div>
-        </div>
+    <div class="overflow-x-auto">
 
         <table class="min-w-full divide-y divide-white/10">
             <thead class="bg-slate-950/40 text-left">
                 <tr>
                     <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">#</th>
-                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Title
-                    </th>
-                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                        Category</th>
+                    <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Task</th>
                     <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">Status
                     </th>
                     <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                         Priority</th>
                     <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                         Due Date</th>
-                    {{-- <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                        Created At</th> --}}
-                    <th class="px-5 py-4 text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
-                        Actions</th>
                     <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
                         Created By</th>
+                    <th class="px-5 py-4 text-center text-xs font-semibold uppercase tracking-[0.2em] text-slate-400">
+                        Actions</th>
                 </tr>
             </thead>
             <tbody class="divide-y divide-white/10">
@@ -35,9 +29,9 @@
                             {{ $loop->iteration + ($tasks->firstItem() ?? 0) - 1 }}</td>
                         <td class="px-5 py-4">
                             <a href="{{ route('tasks.show', $task) }}"
-                                class="font-semibold text-white hover:text-cyan-300">{{ $task->title }}</a>
+                                class="block max-w-sm break-words font-semibold text-white hover:text-cyan-300">{{ $task->title }}</a>
+                            <p class="mt-1 text-xs text-slate-400">{{ $task->category?->name ?? 'No Category' }} <span class="text-slate-600">·</span> Created {{ $task->created_at->format('d M Y') }}</p>
                         </td>
-                        <td class="px-5 py-4 text-slate-300">{{ $task->category?->name ?? 'No Category' }}</td>
                         <td class="px-5 py-4">
                             @switch($task->status)
                                 @case('pending')
@@ -79,18 +73,17 @@
                                 </span>
                             @endif
                         </td>
-                        {{-- <td class="px-5 py-4 text-slate-300">{{ $task->created_at->format('d M Y') }}</td> --}}
                         <td class="px-5 py-4">
-                            <div class="flex items-center justify-center gap-2">
+                            <div class="flex min-w-[190px] items-center justify-center gap-1.5">
                                 <a href="{{ route('tasks.show', $task) }}"
-                                    class="secondary-button px-3 py-2 text-xs">View</a>
+                                    class="secondary-button px-2.5 py-1.5 text-[11px]">View</a>
                                 <a href="{{ route('tasks.edit', $task) }}"
-                                    class="secondary-button px-3 py-2 text-xs">Edit</a>
+                                    class="secondary-button px-2.5 py-1.5 text-[11px]">Edit</a>
                                 <form action="{{ route('tasks.destroy', $task) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
 
-                                    <button type="button" class="danger-button px-3 py-2 text-xs" data-confirm
+                                    <button type="button" class="danger-button px-2.5 py-1.5 text-[11px]" data-confirm
                                         data-confirm-title="Delete Task"
                                         data-confirm-message="Are you sure you want to move this task to trash?"
                                         data-confirm-text="Delete Task">
@@ -99,12 +92,18 @@
                                 </form>
                             </div>
                         </td>
-                        <td class="px-5 py-4 text-center text-slate-300">{{ $task->createdBy?->name ?? 'Unknown' }}
+                        <td class="px-5 py-4 text-slate-300">
+                            <div class="flex min-w-[120px] items-center gap-2">
+                                <span class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-indigo-500/20 text-xs font-bold text-indigo-200">
+                                    {{ strtoupper(substr($task->createdBy?->name ?? 'U', 0, 1)) }}
+                                </span>
+                                <span class="truncate text-sm">{{ $task->createdBy?->name ?? 'Unknown' }}</span>
+                            </div>
                         </td>
                     </tr>
                     @empty
                         <tr>
-                            <td colspan="9" class="px-5 py-16">
+                            <td colspan="7" class="px-5 py-16">
                                 <x-empty-state title="No tasks found"
                                     description="Use the new task button to add your first item." />
                             </td>

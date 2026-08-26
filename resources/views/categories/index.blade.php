@@ -29,21 +29,24 @@
                     </thead>
                     <tbody class="divide-y divide-white/10">
                         @forelse($categories as $category)
-                            <tr class="hover:bg-white/5">
-                                <td class="px-5 py-4 text-slate-300">
+                            <tr class="transition hover:bg-white/5">
+                                <td class="px-5 py-4 text-sm text-slate-500">
                                     {{ $loop->iteration + ($categories->firstItem() ?? 0) - 1 }}</td>
-                                <td class="px-5 py-4 font-semibold text-white">{{ $category->name }}</td>
-                                <td class="px-5 py-4 text-slate-300">{{ $category->created_at->format('d M Y') }}</td>
+                                <td class="px-5 py-4">
+                                    <div class="font-semibold text-white">{{ $category->name }}</div>
+                                    <div class="mt-1 text-xs text-slate-500">Created {{ $category->created_at->format('d M Y') }}</div>
+                                </td>
+                                <td class="px-5 py-4 text-sm text-slate-300">{{ $category->created_at->format('d M Y') }}</td>
                                 @if (auth()->user()->role == 'admin')
                                     <td class="px-5 py-4">
                                         <div class="flex items-center justify-center gap-2">
                                             <a href="{{ route('categories.edit', $category) }}"
-                                                class="secondary-button px-3 py-2 text-xs">Edit</a>
+                                                class="secondary-button px-2.5 py-1.5 text-[11px]">Edit</a>
                                             <form action="{{ route('categories.destroy', $category) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
 
-                                                <button type="button" class="danger-button px-3 py-2 text-xs"
+                                                <button type="button" class="danger-button px-2.5 py-1.5 text-[11px]"
                                                     data-confirm data-confirm-title="Delete Category"
                                                     data-confirm-message="Are you sure you want to delete this category?"
                                                     data-confirm-text="Delete Category">

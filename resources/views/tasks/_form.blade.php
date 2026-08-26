@@ -3,8 +3,8 @@
 <div class="space-y-6">
     @if ($showAssignee)
 
-        <div>
-            <label for="member_id" class="mb-2 block text-sm font-medium text-slate-200">Assign To</label>
+        <div class="rounded-2xl border border-white/10 bg-white/[0.03] p-4">
+            <label for="member_id" class="field-label">Assign To</label>
             <select name="member_id" id="member_id" class="soft-input">
                 <option value="{{ auth()->id() }}" @selected(old('member_id', $task->user_id ?? auth()->id()) == auth()->id())>
                     Assign to Me
@@ -21,23 +21,23 @@
         </div>
     @endif
     <div>
-        <label class="mb-2 block text-sm font-medium text-slate-200">Title</label>
-        <input type="text" name="title" value="{{ old('title', $task->title ?? '') }}" class="soft-input">
+        <label for="title" class="field-label">Title</label>
+        <input id="title" type="text" name="title" value="{{ old('title', $task->title ?? '') }}" class="soft-input">
         @error('title')
             <p class="mt-2 text-sm text-rose-300">{{ $message }}</p>
         @enderror
     </div>
 
     <div>
-        <label class="mb-2 block text-sm font-medium text-slate-200">Description</label>
-        <textarea name="description" rows="5" class="soft-input min-h-[140px] resize-none">{{ old('description', $task->description ?? '') }}</textarea>
+        <label for="description" class="field-label">Description</label>
+        <textarea id="description" name="description" rows="5" class="soft-input min-h-[140px] resize-none">{{ old('description', $task->description ?? '') }}</textarea>
         @error('description')
             <p class="mt-2 text-sm text-rose-300">{{ $message }}</p>
         @enderror
     </div>
 
     <div>
-        <label for="image" class="mb-2 block text-sm font-medium text-slate-200">Image</label>
+        <label for="image" class="field-label">Image</label>
         <input type="file" name="image" id="image" accept="image/*"
             class="soft-input p-3 file:mr-4 file:rounded-full file:border-0 file:bg-cyan-500/10 file:px-3 file:py-1 file:text-sm file:font-medium file:text-cyan-200">
 
@@ -55,8 +55,8 @@
     </div>
 
     <div>
-        <label class="mb-2 block text-sm font-medium text-slate-200">Category</label>
-        <select name="category_id" class="soft-input">
+        <label for="category_id" class="field-label">Category</label>
+        <select id="category_id" name="category_id" class="soft-input">
             <option value="">Choose Category</option>
             @foreach ($categories as $category)
                 <option value="{{ $category->id }}" @selected(old('category_id', $task->category_id ?? '') == $category->id)>{{ $category->name }}</option>

@@ -30,7 +30,7 @@
                         </thead>
                         <tbody class="divide-y divide-white/10">
                             @foreach ($tasks as $task)
-                                <tr class="hover:bg-white/5">
+                                <tr class="transition hover:bg-white/5">
                                     <td class="px-5 py-4">
                                         <div class="font-semibold text-white">{{ $task->title }}</div>
                                         @if ($task->description)
@@ -44,19 +44,19 @@
                                             {{ $task->category?->name ?? 'No Category' }}
                                         </span>
                                     </td>
-                                    <td class="px-5 py-4 text-slate-300">{{ $task->deleted_at->diffForHumans() }}</td>
+                                    <td class="px-5 py-4 text-sm text-slate-300"><span class="inline-flex rounded-full border border-rose-400/20 bg-rose-500/10 px-2.5 py-1 text-xs font-semibold text-rose-200">{{ $task->deleted_at->diffForHumans() }}</span></td>
                                     <td class="px-5 py-4">
                                         <div class="flex items-center justify-center gap-2">
                                             <form action="{{ route('tasks.restore', $task) }}" method="POST">
                                                 @csrf
                                                 @method('PATCH')
                                                 <button type="submit"
-                                                    class="secondary-button border-emerald-500/20 bg-emerald-500/10 text-emerald-200 px-3 py-2 text-xs">Restore</button>
+                                                    class="secondary-button border-emerald-500/20 bg-emerald-500/10 px-2.5 py-1.5 text-[11px] text-emerald-200">Restore</button>
                                             </form>
                                             <form action="{{ route('tasks.forceDelete', $task) }}" method="POST">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="button" class="danger-button px-3 py-2 text-xs"
+                                                <button type="button" class="danger-button px-2.5 py-1.5 text-[11px]"
                                                     data-confirm data-confirm-title="Delete Permanently"
                                                     data-confirm-message="This task will be permanently deleted and cannot be restored."
                                                     data-confirm-text="Delete Forever">
